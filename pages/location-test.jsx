@@ -15,6 +15,7 @@ export default function LocationTest() {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           // 成功回調
+          alert('允許');
           setPermissionStatus("允許");
           console.log(
             "位置:",
@@ -24,6 +25,7 @@ export default function LocationTest() {
         },
         (error) => {
           // 錯誤回調
+          alert('不允許');
           if (error.code === error.PERMISSION_DENIED) {
             setPermissionStatus("不允許");
           }
@@ -37,9 +39,9 @@ export default function LocationTest() {
   }
 
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center min-h-screen">
       <h1>位置請求測試</h1>
-      <button onClick={requestLocation}>請求位置許可</button>
+      <button className="bg-black font-bold text-white px-4 py-2 rounded-lg" onClick={requestLocation}>請求位置許可</button>
       <p>許可狀態: {permissionStatus}</p>
     </div>
   );
