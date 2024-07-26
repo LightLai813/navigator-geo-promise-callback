@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 
 export default function LocationTest() {
-  const [permissionStatus, setPermissionStatus] = useState("未請求");
+  const [permissionStatus, setPermissionStatus] = useState(<span className="text-gray-300">未請求</span>);
+  const [latlon, setLatlon] = useState(null);
   const [isSupported, setIsSupported] = useState(true);
 
   useEffect(() => {
-    if (!("geolocation" in navigator)) {
-      setIsSupported(false);
-    }
+    requestLocation()
   }, []);
 
   const requestLocation = () => {
@@ -15,8 +14,8 @@ export default function LocationTest() {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           // 成功回調
-          alert('允許');
-          setPermissionStatus("允許");
+          setPermissionStatus(<span className="text-blue-500">允許</span>);
+          setLatlon(<p className="text-base">{position.coords.latitude}, {position.coords.longitude}</p>);
           console.log(
             "位置:",
             position.coords.latitude,
@@ -25,10 +24,11 @@ export default function LocationTest() {
         },
         (error) => {
           // 錯誤回調
-          alert('不允許');
           if (error.code === error.PERMISSION_DENIED) {
-            setPermissionStatus("不允許");
+            setPermissionStatus(<span className="text-red-500">不允許</span>);
           }
+
+          setLatlon(null);
         }
       );
     }
@@ -40,9 +40,10 @@ export default function LocationTest() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1>位置請求測試</h1>
-      <button className="bg-black font-bold text-white px-4 py-2 rounded-lg" onClick={requestLocation}>請求位置許可</button>
-      <p>許可狀態: {permissionStatus}</p>
+      {/* <button className="bg-black font-bold text-white px-4 py-2 rounded-lg cursor-pointer" onClick={requestLocation}>請求位置許可</button> */}
+      <p className="mt-10">許可狀態</p>
+      <p className="mt-2 text-4xl">{permissionStatus}</p>
+      {latlon}
     </div>
   );
 }
